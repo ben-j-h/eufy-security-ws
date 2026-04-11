@@ -8,6 +8,7 @@ FROM node:20-alpine3.18 AS prod
 WORKDIR /tmp_prod
 COPY --from=build /tmp/dist ./dist
 COPY --from=build /tmp/docker/run.sh ./run.sh
+COPY --from=build /tmp/docker/eufy-security-client-3.8.0.tgz ./docker/eufy-security-client-3.8.0.tgz
 COPY --from=build /tmp/package.json ./package.json
 COPY --from=build /tmp/package-lock.json ./package-lock.json
 RUN npm ci --only=production
