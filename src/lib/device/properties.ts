@@ -321,6 +321,9 @@ type DevicePropertiesSchema6 = Modify<
     open: boolean;
     openedByType: number;
     openedByName: string;
+    lastOpenedByType: number;
+    lastOpenedByName: string;
+    timesOpened: number;
     tamperingAlert: boolean;
     lowTemperatureAlert: boolean;
     highTemperatureAlert: boolean;
@@ -1162,6 +1165,15 @@ export const dumpDeviceProperties = (
   device6.openedByName = device.getPropertyValue(
     PropertyName.DeviceOpenedByName,
   ) as string;
+  device6.lastOpenedByType = device.getPropertyValue(
+    PropertyName.DeviceLastOpenedByType,
+  ) as number;
+  device6.lastOpenedByName = device.getPropertyValue(
+    PropertyName.DeviceLastOpenedByName,
+  ) as string;
+  device6.timesOpened = device.getPropertyValue(
+    PropertyName.DeviceTimesOpened,
+  ) as number;
   device6.tamperingAlert = device.getPropertyValue(
     PropertyName.DeviceTamperingAlert,
   ) as boolean;
@@ -1624,6 +1636,9 @@ export const dumpDevicePropertiesMetadata = (
   result["open"] = metadata[PropertyName.DeviceOpen];
   result["openedByType"] = metadata[PropertyName.DeviceOpenedByType];
   result["openedByName"] = metadata[PropertyName.DeviceOpenedByName];
+  result["lastOpenedByType"] = metadata[PropertyName.DeviceLastOpenedByType];
+  result["lastOpenedByName"] = metadata[PropertyName.DeviceLastOpenedByName];
+  result["timesOpened"] = metadata[PropertyName.DeviceTimesOpened];
   result["tamperingAlert"] = metadata[PropertyName.DeviceTamperingAlert];
   result["lowTemperatureAlert"] =
     metadata[PropertyName.DeviceLowTemperatureAlert];
