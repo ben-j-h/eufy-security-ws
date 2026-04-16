@@ -332,6 +332,7 @@ type DevicePropertiesSchema6 = Modify<
     batteryFullyChargedAlert: boolean;
     isDeliveryDenied: boolean;
     hasMasterPin: boolean;
+    deliveryPicture: Picture | null;
   }
 >;
 
@@ -1198,6 +1199,9 @@ export const dumpDeviceProperties = (
   device6.hasMasterPin = device.getPropertyValue(
     PropertyName.DeviceHasMasterPin,
   ) as boolean;
+  device6.deliveryPicture = device.getPropertyValue(
+    PropertyName.DeviceDeliveryPicture,
+  ) as Picture | null;
 
   return device6;
 };
@@ -1650,6 +1654,7 @@ export const dumpDevicePropertiesMetadata = (
     metadata[PropertyName.DeviceBatteryFullyChargedAlert];
   result["isDeliveryDenied"] = metadata[PropertyName.DeviceIsDeliveryDenied];
   result["hasMasterPin"] = metadata[PropertyName.DeviceHasMasterPin];
+  result["deliveryPicture"] = metadata[PropertyName.DeviceDeliveryPicture];
 
   return result;
 };
