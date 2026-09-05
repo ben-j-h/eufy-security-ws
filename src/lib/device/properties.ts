@@ -332,7 +332,14 @@ type DevicePropertiesSchema6 = Modify<
     batteryFullyChargedAlert: boolean;
     isDeliveryDenied: boolean;
     hasMasterPin: boolean;
-    deliveryPicture: Picture | null;
+  }
+>;
+
+type DevicePropertiesSchema7 = Modify<
+  DevicePropertiesSchema6,
+  {
+    deliveryThumbnail: Picture;
+    deliveryCrop: Picture;
   }
 >;
 
@@ -343,7 +350,8 @@ export type DeviceProperties =
   | DevicePropertiesSchema3
   | DevicePropertiesSchema4
   | DevicePropertiesSchema5
-  | DevicePropertiesSchema6;
+  | DevicePropertiesSchema6
+  | DevicePropertiesSchema7;
 
 export const dumpDeviceProperties = (
   device: Device,
@@ -1115,7 +1123,7 @@ export const dumpDeviceProperties = (
     return device5;
   }
 
-  // All schemas >= 21
+  // All schemas >= 21 (and < 22)
   const device6 = device5 as DevicePropertiesSchema6;
   device6.notificationVehicle = device.getPropertyValue(
     PropertyName.DeviceNotificationVehicle,
@@ -1199,11 +1207,21 @@ export const dumpDeviceProperties = (
   device6.hasMasterPin = device.getPropertyValue(
     PropertyName.DeviceHasMasterPin,
   ) as boolean;
-  device6.deliveryPicture = device.getPropertyValue(
-    PropertyName.DeviceDeliveryPicture,
-  ) as Picture | null;
 
-  return device6;
+  if (schemaVersion <= 21) {
+    return device6;
+  }
+
+  // All schemas >= 22
+  const device7 = device6 as DevicePropertiesSchema7;
+  device7.deliveryThumbnail = device.getPropertyValue(
+    PropertyName.DeviceDeliveryThumbnail,
+  ) as Picture;
+  device7.deliveryCrop = device.getPropertyValue(
+    PropertyName.DeviceDeliveryCrop,
+  ) as Picture;
+
+  return device7;
 };
 
 export const dumpDevicePropertiesMetadata = (
@@ -1654,7 +1672,14 @@ export const dumpDevicePropertiesMetadata = (
     metadata[PropertyName.DeviceBatteryFullyChargedAlert];
   result["isDeliveryDenied"] = metadata[PropertyName.DeviceIsDeliveryDenied];
   result["hasMasterPin"] = metadata[PropertyName.DeviceHasMasterPin];
-  result["deliveryPicture"] = metadata[PropertyName.DeviceDeliveryPicture];
+
+  if (schemaVersion <= 21) {
+    return result;
+  }
+
+  // All schemas >= 22
+  result["deliveryThumbnail"] = metadata[PropertyName.DeviceDeliveryThumbnail];
+  result["deliveryCrop"] = metadata[PropertyName.DeviceDeliveryCrop];
 
   return result;
 };
